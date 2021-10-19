@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
-
+use App\Models\User;
+use App\Helpers\Helpers;
 class LoginController extends Controller
 {
     /*
@@ -35,21 +36,31 @@ class LoginController extends Controller
   
 
     public function login(Request $request){
-        
+
         $data = $request->validate([
-            'email' => 'required',
+            'email' => 'required|email',
             'password' => 'required',
         ]);
-        if (Auth::attempt($data)) {
-            return response()->json(['status' => 'success', 'msg' => 'logged in successfully'], 200);
+    
+        $user = User::where('email', $request->email)->first();
+    
+        if (! $user || ! Hash::check($request->password, $user->password)) {
+            return response(['status' => 'error', 'msg' => 'Invalid Credentials', 'data' => ""]);
         }
-  
-        return response()->json(['status' => 'error', 'msg' => 'Invalid Email or Password'], 401);
+    
+            return response([   
+                'status' => 'success',
+                'msg' => 'logged in successfully',
+                'data' => [
+                        'authentication-token' => $user->createToken('authentication-token')->plainTextToken
+                        ]
+                    ]);
+       
     }
 
     public function logout(){
-        // return 'we are here';
-        if(Auth::logout()){
+        
+        if(auth()->user()->tokens()->delete()){
             return response()->json(['status' => 'success', 'msg' => 'Logged Out'], 200);
 
         }
