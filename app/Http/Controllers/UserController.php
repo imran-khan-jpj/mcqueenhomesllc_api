@@ -4,15 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Helpers\Helpers;
 
 use App\Models\User;
 
 class UserController extends Controller
 {
+    
     public function index(){
-        
-        return response()->json(['status' => 'success', 'data' => User::all()], 200);
-        // return "we are here always";
+        if(auth()->user()->role == 'admin'){
+            return Helpers::response('success', User::all(), 'users found successfully', 200);
+        }else{
+            return Helpers::response('error', "Unauthorized", "", 403);
+        }
     }
 
     public function register(Request $request){
@@ -26,11 +30,17 @@ class UserController extends Controller
    
 
         if($user = User::create($data)){
-            return response()->json(['status' => 'success', 'data' => $user, 'msg' => 'user created successfull.'], 200);
+           
+            return Helpers::response('success', 'user created successfully. please login to continues', $user, 200);
         }else{
-            return response()->json(['status' => 'error', 'data' => "", 'msg' => 'Something went wrong please try again'], 401);
+            
+            return Helpers::response('success', 'Something went wrong', "", 401);
 
         }      
+    }
+
+    public function show(){
+        return auth()->user();
     }
 
     public function updateUser(Request $request){
@@ -42,11 +52,11 @@ class UserController extends Controller
 
         if($user->update($data)){
 
-            return response()->json(['status' => 'success', 'msg' => 'User updated successfully'], 200);
+            return Helpers::response('success', 'User Updated Successfully', 200);
         }
     }
 
     public function userDetail(){
-        return response()->json(['status' => 'success', 'data' => auth()->user()], 200);
+        return Helpers::response('success', "", auth()->user(), 200);
     }
 }

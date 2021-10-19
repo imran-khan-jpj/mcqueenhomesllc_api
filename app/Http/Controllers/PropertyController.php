@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Property;
 use App\Models\PropertyImage;
+use App\Helpers\Helpers;
 
 class PropertyController extends Controller
 {
@@ -12,9 +13,9 @@ class PropertyController extends Controller
 
         $properties = Property::with('images')->get();
         if(count($properties)){
-            return response()->json(['status'=> 'success', 'data' => $properties], 200);
+            return Helpers::response('success', 'properties found', $properties, 200);
         }
-        return response()->json(['status'=> 'success', 'data' => []], 200);
+        return Helpers::response('success', '', [], 200);
     }
     
 
@@ -34,30 +35,23 @@ class PropertyController extends Controller
                 $property->images()->save($saveImages);
             }
 
-
-            return response()->json([
-                'status'=> 'success', 
-                'msg' => "property created successfully", 
-                'data' => $property
-            ], 200);
+            return Helpers::response('success', 'property created successfully', $property, 200);
+           
         }else{
-            return response()->json([
-                'status'=> 'error', 
-                'msg' => "Something went wrong pleast try again", 
-                'data' => ""
-            ], 200);
+            return Helpers::response('success', 'Something went wrong please try again', "", 401);
+           
         }
     }
 
     public function show(Property $property){
         
-        return response()->json(['status' => 'success', 'data' => $property, 'msg' => 'property found successfully']);
+        return Helpers::response('success', $property, 'Property Found', 200);
     }
 
     public function update(Request $request, Property $property){
 
         if($property->user->id !== auth()->user()->id){
-            return response()->json(['status' => 'error','msg' => 'something went wrong'], 401);
+            return Helpers::response('success', 'Unauthorized', "", 401);
         }
 
         $data = $this->validateRequest($request);
@@ -75,29 +69,23 @@ class PropertyController extends Controller
 
 
         if($property->update($data)){
-            return response()->json(['status'=> 'success', 'msg' => "property updated successfully", 'data' => $property], 200);
+            return Helpers::response('success', 'property updated successfully', $property, 200);
         }else{
-            return response()->json([
-                'status'=> 'error', 
-                'msg' => "something went wrong please try again later", 
-                'data' => ""
-            ], 401);
+            
+            return Helpers::response('error', 'something went wrong please try again', "", 401);
         }
     }
 
     public function destroy(Property $property){
 
         if($property->user->id !== auth()->user()->id){
-            return response()->json(['status' => 'error','msg' => 'something went wrong'], 401);
+            return Helpers::response('error', 'something went wrong', "", 401);
         }
         if($property->delete()){
-            return response()->json([
-                'status'=> 'success', 
-                'msg' => "property deleted successfully", 
-                'data' => $property
-            ], 200);
+            
+            return Helpers::response('success', 'property deleted successfully', "", 200);
         }else{
-            return response()->json(['status' => 'error','msg' => 'something went wrong'], 401);
+            return Helpers::response('error', 'something went wrong', "", 401);
 
         }
     }
@@ -110,17 +98,10 @@ class PropertyController extends Controller
 
         
             if($image->delete()){
-                return response()->json([
-                    'status'=> 'success', 
-                    'msg' => "property image deleted successfully", 
-                    'data' => ""
-                ], 200);
+                return Helpers::response('success', 'property image deleted successfully', "", 200);
             }else{
-                return response()->json([
-                    'status'=> 'error', 
-                    'msg' => "something went wrong please try again", 
-                    'data' => ""
-                ], 401);
+                return Helpers::response('error', 'something went wrong please try again', "", 401);
+               
             }
     }
 
@@ -147,8 +128,6 @@ class PropertyController extends Controller
         return array_merge($arr1, $arr2);
         
     }
-
-    
 
 
 }
