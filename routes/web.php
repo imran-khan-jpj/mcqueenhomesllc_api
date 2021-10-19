@@ -18,28 +18,28 @@ use App\Http\Controllers\PropertyController;
 // return "we are web.php";
 
 //tested apis
-Route::post("login", [LoginController::class, 'login']);
-Route::post("logout", [LoginController::class, 'logout']);
-// Authenticated Routes
-// Admin Routes
-Route::get('users', [UserController::class, 'index']);
-Route::delete('user/{user}', [UserController::class, "destroy"]);
+// Route::post("login", [LoginController::class, 'login']);
+// Route::post("logout", [LoginController::class, 'logout']);
+// // Authenticated Routes
+// // Admin Routes
+// Route::get('users', [UserController::class, 'index']);
+// Route::delete('user/{user}', [UserController::class, "destroy"]);
 
-// //User Routes
-Route::post("register", [UserController::class, 'register']);
+// // //User Routes
+// Route::post("register", [UserController::class, 'register']);
 
-// //Property Routes
-Route::get('/property', [PropertyController::class, 'index']);
-Route::get('/property/{property}', [PropertyController::class, 'show']);
-Route::post('/property/store', [PropertyController::class, 'store']);
-Route::post('/property/update/{property}', [PropertyController::class, 'update']);
-Route::delete('/property/delete/{property}', [PropertyController::class, 'destroy']);
-Route::delete('/property/{property}/image/delete/{image}', [PropertyController::class, 'imageDelete']);
-
-
+// // //Property Routes
+// Route::get('/property', [PropertyController::class, 'index']);
+// Route::get('/property/{property}', [PropertyController::class, 'show']);
+// Route::post('/property/store', [PropertyController::class, 'store']);
+// Route::post('/property/update/{property}', [PropertyController::class, 'update']);
+// Route::delete('/property/delete/{property}', [PropertyController::class, 'destroy']);
+// Route::delete('/property/{property}/image/delete/{image}', [PropertyController::class, 'imageDelete']);
 
 
 
-Route::get('/csrf', function(){
-    return csrf_token();
-});
+// Route::post("login", [LoginController::class, 'login']);
+
+// Route::get('/csrf', function(){
+//     return csrf_token();
+// });
