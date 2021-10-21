@@ -43,6 +43,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
 });
 
+Route::any('/{any}', function ($any) {
+
+    return response()->json(['status' => 'error', 'msg' => 'route not found', 'data' => ""], 404);
+  
+  })->where('any', '.*');
+
 
 
 // axios.defaults.withCredentials = true;

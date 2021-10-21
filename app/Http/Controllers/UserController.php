@@ -23,7 +23,7 @@ class UserController extends Controller
         $data = $request->validate([
             'name'     => 'required|string',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6|max:12'
+            'password' => 'required|confirmed|min:6|max:12'
         ]);
 
         $data['password'] = Hash::make('password');
